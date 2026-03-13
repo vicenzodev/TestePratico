@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # 1. O container do Banco de Dados MySQL
+  db:
+    image: mysql:8.0
+    container_name: api_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: api_database
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: api_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # 2. O container do Mock dos Gateways que você já testou
+  gateways-mock:
+    image: matheusprotzen/gateways-mock
+    container_name: api_gateways_mock
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+
+  # 3. O container da sua Aplicação Laravel (usando a imagem oficial do Laravel Sail)
+  # Nota: Se você já estiver rodando o PHP localmente via 'php artisan serve', 
+  # você pode ignorar este bloco por enquanto, mas ele cumpre seu requisito!
+  laravel.test:
+    build:
+      context: ./vendor/laravel/sail/runtimes/8.3
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP:-1000}'
+    image: sail-8.3/app
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - "80:80"
+    environment:
+      WWWUSER: '${WWWUSER:-1000}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    volumes:
+      - '.:/var/www/html'
+    depends_on:
+      - db
+      - gateways-mock
+
+volumes:
+  mysql_data:
+    driver: local
