@@ -49,7 +49,30 @@ class TransactionFeatureTest extends TestCase{
     }
     
     public function testeListAllTransactions(){
-        $transactions = Transaction::with(['client','gateway','products'])->latest();
-        return response()->json($transactions, 200);
+        $client = Client::create(['name' => 'Cliente Lista', 'email' => 'lista@teste.com']);
+        $gateway = Gateway::create(['name' => 'Gateway Lista', 'is_active' => true, 'priority' => 1]);
+
+        Transaction::create([
+            'client_id' => $client->id,
+            'gateway_id' => $gateway->id,
+            'amount' => 15000,
+            'card_last_numbers' => '4321',
+            'status' => 'paid'
+        ]);
+
+        $response = $this->getJson('/api/transactions');
+        
+        $responseData = $response->json('data');
+
+        $this->assertNotNull($responseData, 'A chave data veio nula!'); 
+        $this->assertNotEmpty($responseData, 'A chave data está vazia!');
+        $response->assertJsonCount(1, 'data');
+
+        $response->assertStatus(200) 
+                 ->assertJsonStructure([
+                     'data' => [
+                         '*' => ['id', 'client_id', 'gateway_id', 'amount', 'status', 'created_at']
+                     ]
+                 ]);
     }
 }

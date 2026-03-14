@@ -48,4 +48,9 @@ class TransactionController extends Controller{
             ],201);
         });
     }
+
+    public function index(){
+        $transactions = Transaction::with(['client','gateway','products'])->get();
+        return response()->json(['data' => $transactions], 200);
+    }
 }
