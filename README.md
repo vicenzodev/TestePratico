@@ -24,7 +24,7 @@ O foco desta entrega foi construir uma base estrutural sólida, segura e testada
 
 ## ⏳ O que ficou pendente e Justificativa
 
-Devido à limitação de tempo para a execução do desafio, optei por uma abordagem de qualidade em vez de quantidade. Priorizei garantir que o código escrito estivesse perfeitamente coberto por testes, com rotas blindadas e com os fundamentos do framework aplicados corretamente (Injeção de dependências, Facades, Eloquent Relationships).
+Devido à limitação de tempo para a execução do desafio, optei por uma abordagem de qualidade em vez de quantidade. Priorizei garantir que o código escrito estivesse perfeitamente coberto por testes, com rotas blindadas e com os fundamentos do framework aplicados corretamente (Injeção de dependências, Facades, Eloquent Relationships). A principal dificuldade foi o tempo que tinha para dedicar ao projeto(menos de 1 hora ao dia), mesmo assim, me dediquei para entregar o máximo possível.
 
 Por focar nessa base de qualidade, as seguintes regras de negócio específicas do Nível 2 ficaram pendentes:
 * Lógica de cálculo do valor da compra com base no produto e quantidade via back-end.
